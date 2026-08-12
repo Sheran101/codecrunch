@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "PowerShell(npm init *)",
+      "PowerShell(npm i *)",
+      "Skill(claude-api)"
+    ]
+  }
+}

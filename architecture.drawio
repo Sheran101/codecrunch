@@ -1,0 +1,189 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.7.7">
+  <diagram id="codecrunch-arch" name="CodeCrunch Architecture">
+    <mxGraphModel dx="1600" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1754" pageHeight="1240" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== Title ===== -->
+        <mxCell id="title" value="&lt;b&gt;Autonomous CodeCrunch Organizer — System Architecture&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=28;fontColor=#1a1a1a;" vertex="1" parent="1">
+          <mxGeometry x="40" y="24" width="1660" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Weekly hackathon pipeline: poll → topic → PRD → slides → review → deliver&amp;nbsp;&amp;nbsp;·&amp;nbsp;&amp;nbsp;one Node.js process · one SQLite file · 4 LLM agents · web RSVP UI" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="66" width="1660" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Trigger group ===== -->
+        <mxCell id="grpTrig" value="⏰ TRIGGERS" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=6;fontSize=14;fontStyle=1;fillColor=#FFF3E6;strokeColor=#D79B00;fontColor=#B36B00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="250" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="cron" value="&lt;b&gt;node-cron&lt;/b&gt;&lt;br&gt;0 9 * * 2 — Tuesday 09:00&lt;br&gt;&lt;font style=&apos;font-size:11px&apos; color=&apos;#8a6d3b&apos;&gt;idempotent: skips if today&amp;#39;s run is DONE&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="196" width="210" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="demo" value="&lt;b&gt;RUN_NOW=true&lt;/b&gt; npm start&lt;br&gt;&lt;font style=&apos;font-size:11px&apos;&gt;demo mode — fire immediately&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;dashed=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="210" height="66" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Node.js process container ===== -->
+        <mxCell id="proc" value="⚙️ SINGLE NODE.JS PROCESS — TypeScript · no queues · no microservices · no cloud infra" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontSize=15;fontStyle=1;fillColor=#FCFCFC;strokeColor=#666666;dashed=1;dashPattern=8 6;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="350" y="120" width="820" height="700" as="geometry" />
+        </mxCell>
+
+        <mxCell id="orch" value="&lt;b&gt;&lt;font style=&apos;font-size:16px&apos;&gt;Orchestrator&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;relay baton —&lt;br&gt;passes JSON output&lt;br&gt;stage → stage&lt;br&gt;&lt;br&gt;checkpoints every&lt;br&gt;stage to SQLite&lt;br&gt;&lt;br&gt;retries + resume&lt;br&gt;on crash / restart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=13;shadow=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="390" y="200" width="160" height="540" as="geometry" />
+        </mxCell>
+
+        <mxCell id="a1" value="&lt;b&gt;① Participant Collection&lt;/b&gt;&lt;br&gt;Discord poll ✅ reactions + web RSVPs → merged &amp;amp; de-duped" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="440" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="&lt;b&gt;② Idea Agent&lt;/b&gt;&lt;br&gt;picks a fresh topic + difficulty based on headcount" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="310" width="440" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="&lt;b&gt;③ Product Agent&lt;/b&gt;&lt;br&gt;writes PRD: problem · requirements · acceptance criteria · stretch goals" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="420" width="440" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="&lt;b&gt;④ Presentation Agent&lt;/b&gt;&lt;br&gt;slide content as JSON → pptxgenjs renders slides (fixed template)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="530" width="440" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="&lt;b&gt;⑤ Reviewer Agent&lt;/b&gt;&lt;br&gt;QA gate: clarity · one-evening feasibility · testable acceptance criteria" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E1F5;strokeColor=#4472C4;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="640" width="440" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="webSrv" value="&lt;b&gt;🌐 HTTP server (web.ts)&lt;/b&gt; — serves RSVP page · /api/status · /rsvp · /run" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B0E3E6;strokeColor=#0E8088;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="745" width="440" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Chat platform ===== -->
+        <mxCell id="chatC" value="💬 CHAT PLATFORM — Discord (discord.js v14) · MS Teams swap ready" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=6;fontSize=13;fontStyle=1;fillColor=#F3EDF7;strokeColor=#9673A6;fontColor=#6A4A80;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="150" width="300" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="ch1" value="&lt;b&gt;#codecrunch&lt;/b&gt;&lt;br&gt;poll: React ✅ — message links to the web RSVP page" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="200" width="260" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ch2" value="&lt;b&gt;#codecrunch-ops&lt;/b&gt;&lt;br&gt;supervisor summary + file attachments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="305" width="260" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sup" value="Supervisor" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=13;fontStyle=1;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;" vertex="1" parent="1">
+          <mxGeometry x="1625" y="285" width="50" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Web browser (participants) ===== -->
+        <mxCell id="browser" value="&lt;b&gt;👥 Participants&amp;#39; browsers&lt;/b&gt;&lt;br&gt;RSVP form &amp;quot;I&amp;#39;m in ✅&amp;quot; · live run status&lt;br&gt;▶ &amp;quot;Run pipeline now&amp;quot; button (organizer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5F5F2;strokeColor=#0E8088;fontSize=13;fontColor=#0B5E63;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="450" width="300" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Claude API ===== -->
+        <mxCell id="claude" value="&lt;b&gt;Anthropic Claude API&lt;/b&gt;&lt;br&gt;one model for all agents&lt;br&gt;structured JSON output" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#F6E1D3;strokeColor=#C15F3C;fontSize=13;fontColor=#8a3c1f;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="630" width="300" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Storage ===== -->
+        <mxCell id="db" value="&lt;b&gt;SQLite — state.db&lt;/b&gt;&lt;br&gt;(better-sqlite3)&lt;br&gt;runs · participants · rsvps · artifacts" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=13;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="880" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="art" value="&lt;b&gt;artifacts/YYYY-MM-DD/&lt;/b&gt;&lt;br&gt;📄 PRD.md&amp;nbsp;&amp;nbsp;·&amp;nbsp;&amp;nbsp;📊 slides.pptx&lt;br&gt;🧾 run.json (full pipeline trace)" style="shape=folder;whiteSpace=wrap;html=1;tabWidth=100;tabHeight=24;tabPosition=left;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=13;shadow=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="780" y="880" width="300" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Legend ===== -->
+        <mxCell id="legend" value="LEGEND" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=6;fontSize=13;fontStyle=1;fillColor=#FFFFFF;strokeColor=#BBBBBB;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="810" width="300" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1" value="" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1"><mxGeometry x="1270" y="846" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg1t" value="Trigger / scheduler" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="842" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg2" value="" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1"><mxGeometry x="1270" y="873" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg2t" value="Orchestrator (control flow)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="869" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg3" value="" style="rounded=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1"><mxGeometry x="1270" y="900" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg3t" value="Pipeline stages (②–⑤ call the LLM)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="896" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg4" value="" style="rounded=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1"><mxGeometry x="1270" y="927" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg4t" value="Chat platform (external)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="923" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg5" value="" style="rounded=1;fillColor=#B0E3E6;strokeColor=#0E8088;" vertex="1" parent="1"><mxGeometry x="1270" y="954" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg5t" value="Web RSVP (in-process HTTP + browser)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="950" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg6" value="" style="rounded=1;fillColor=#F6E1D3;strokeColor=#C15F3C;" vertex="1" parent="1"><mxGeometry x="1270" y="981" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg6t" value="Claude API (external)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="977" width="240" height="26" as="geometry" /></mxCell>
+        <mxCell id="lg7" value="" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1"><mxGeometry x="1270" y="1008" width="18" height="18" as="geometry" /></mxCell>
+        <mxCell id="lg7t" value="Storage — state + artifacts" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1298" y="1004" width="240" height="26" as="geometry" /></mxCell>
+
+        <!-- ===== State machine strip ===== -->
+        <mxCell id="smC" value="🔁 RUN STATE MACHINE — each transition checkpointed in SQLite → crash-safe resume from last completed stage" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontSize=14;fontStyle=1;fillColor=#FAFAFA;strokeColor=#999999;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1060" width="1630" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="STARTED" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="100" y="1108" width="130" height="40" as="geometry" /></mxCell>
+        <mxCell id="s2" value="COLLECTED" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="310" y="1108" width="140" height="40" as="geometry" /></mxCell>
+        <mxCell id="s3" value="TOPIC_SELECTED" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="1108" width="170" height="40" as="geometry" /></mxCell>
+        <mxCell id="s4" value="SPEC_READY" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="780" y="1108" width="140" height="40" as="geometry" /></mxCell>
+        <mxCell id="s5" value="REVIEWED" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1000" y="1108" width="130" height="40" as="geometry" /></mxCell>
+        <mxCell id="s6" value="✅ DONE" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1210" y="1108" width="100" height="40" as="geometry" /></mxCell>
+        <mxCell id="sf" value="⛔ FAILED — from any state · supervisor always notified · retried from scratch next fire" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=11;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1390" y="1102" width="250" height="52" as="geometry" /></mxCell>
+        <mxCell id="es1" style="edgeStyle=none;html=1;strokeColor=#999999;strokeWidth=1.5;" edge="1" parent="1" source="s1" target="s2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es2" style="edgeStyle=none;html=1;strokeColor=#999999;strokeWidth=1.5;" edge="1" parent="1" source="s2" target="s3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es3" style="edgeStyle=none;html=1;strokeColor=#999999;strokeWidth=1.5;" edge="1" parent="1" source="s3" target="s4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es4" style="edgeStyle=none;html=1;strokeColor=#999999;strokeWidth=1.5;" edge="1" parent="1" source="s4" target="s5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es5" style="edgeStyle=none;html=1;strokeColor=#999999;strokeWidth=1.5;" edge="1" parent="1" source="s5" target="s6"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ===== Edges ===== -->
+        <mxCell id="eCron" value="fire weekly run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#D79B00;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#B36B00;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.15;" edge="1" parent="1" source="cron" target="orch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eDemo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#D79B00;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="demo" target="orch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="eO1" style="edgeStyle=none;html=1;strokeColor=#8A8A8A;strokeWidth=1.5;exitX=1;exitY=0.074;entryX=0;entryY=0.5;" edge="1" parent="1" source="orch" target="a1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eO2" style="edgeStyle=none;html=1;strokeColor=#8A8A8A;strokeWidth=1.5;exitX=1;exitY=0.278;entryX=0;entryY=0.5;" edge="1" parent="1" source="orch" target="a2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eO3" style="edgeStyle=none;html=1;strokeColor=#8A8A8A;strokeWidth=1.5;exitX=1;exitY=0.481;entryX=0;entryY=0.5;" edge="1" parent="1" source="orch" target="a3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eO4" style="edgeStyle=none;html=1;strokeColor=#8A8A8A;strokeWidth=1.5;exitX=1;exitY=0.685;entryX=0;entryY=0.5;" edge="1" parent="1" source="orch" target="a4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eO5" style="edgeStyle=none;html=1;strokeColor=#8A8A8A;strokeWidth=1.5;exitX=1;exitY=0.889;entryX=0;entryY=0.5;" edge="1" parent="1" source="orch" target="a5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="eChain1" value="participants[] + count" style="edgeStyle=none;html=1;strokeColor=#3B6BB5;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#2F5496;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a1" target="a2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eChain2" value="topic + difficulty" style="edgeStyle=none;html=1;strokeColor=#3B6BB5;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#2F5496;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a2" target="a3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eChain3" value="spec (PRD)" style="edgeStyle=none;html=1;strokeColor=#3B6BB5;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#2F5496;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3" target="a4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eChain4" value="slide JSON" style="edgeStyle=none;html=1;strokeColor=#3B6BB5;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#2F5496;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a4" target="a5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="eLoop" value="❌ issues → regenerate (max 2 loops, then force-approve)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#CC4125;strokeWidth=2;dashed=1;fontSize=11;fontStyle=1;fontColor=#CC4125;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.3;entryX=1;entryY=0.7;" edge="1" parent="1" source="a5" target="a4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1135" y="664" /><mxPoint x="1135" y="586" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ePoll" value="post poll (with web link)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673A6;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#6A4A80;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.25;entryX=0;entryY=0.3;" edge="1" parent="1" source="a1" target="ch1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eReact" value="✅ reactions after wait window" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673A6;strokeWidth=2;dashed=1;fontSize=11;fontColor=#6A4A80;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.65;entryX=1;entryY=0.55;" edge="1" parent="1" source="ch1" target="a1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="eClaude2" style="edgeStyle=none;html=1;strokeColor=#C15F3C;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.2;" edge="1" parent="1" source="a2" target="claude"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eClaude3" value="structured JSON in / out — zod-validated" style="edgeStyle=none;html=1;strokeColor=#C15F3C;strokeWidth=1.5;dashed=1;fontSize=11;fontColor=#8A3C1F;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.4;" edge="1" parent="1" source="a3" target="claude"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eClaude4" style="edgeStyle=none;html=1;strokeColor=#C15F3C;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.1;entryX=0;entryY=0.6;" edge="1" parent="1" source="a4" target="claude"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eClaude5" style="edgeStyle=none;html=1;strokeColor=#C15F3C;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.6;entryX=0;entryY=0.8;" edge="1" parent="1" source="a5" target="claude"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="eDb" value="checkpoint each stage · resume on crash" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6B8E5A;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#4D6B3C;labelBackgroundColor=#FFFFFF;startArrow=classic;startFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="orch" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ePast" value="past topics (avoid repeats)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82B366;strokeWidth=1.5;dashed=1;fontSize=11;fontColor=#4D6B3C;labelBackgroundColor=#FFFFFF;exitX=0.9;exitY=0;entryX=0;entryY=0.8;" edge="1" parent="1" source="db" target="a2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="634" y="374" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eRsvpRead" value="web RSVPs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0E8088;strokeWidth=1.5;dashed=1;fontSize=11;fontColor=#0B5E63;labelBackgroundColor=#FFFFFF;exitX=0.75;exitY=0;entryX=0;entryY=0.8;" edge="1" parent="1" source="db" target="a1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="595" y="264" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="eHttp" value="HTTP :3000" style="edgeStyle=none;html=1;strokeColor=#0E8088;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#0B5E63;labelBackgroundColor=#FFFFFF;startArrow=classic;startFill=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="browser" target="webSrv"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eRsvpStore" value="store RSVPs · read status" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0E8088;strokeWidth=1.5;fontSize=11;fontColor=#0B5E63;labelBackgroundColor=#FFFFFF;exitX=0.1;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="webSrv" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eRunNow" value="▶ POST /run fires pipeline" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0E8088;strokeWidth=1.5;dashed=1;fontSize=11;fontStyle=1;fontColor=#0B5E63;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="webSrv" target="orch">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="470" y="772" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="eApproved" value="✅ approved → write PRD.md · slides.pptx · run.json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4D9950;strokeWidth=2.5;fontSize=12;fontStyle=1;fontColor=#2E6B31;labelBackgroundColor=#FFFFFF;exitX=0.35;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a5" target="art"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="eNotify" value="notify supervisor: topic + headcount + files (⚠ low turnout / open review notes)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4D9950;strokeWidth=2;fontSize=11;fontColor=#2E6B31;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="art" target="ch2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1205" y="955" /><mxPoint x="1205" y="428" /><mxPoint x="1400" y="428" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eSup" value="@mention" style="edgeStyle=none;html=1;strokeColor=#9673A6;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#6A4A80;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="ch2" target="sup"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
