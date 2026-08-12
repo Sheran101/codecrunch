@@ -130,9 +130,10 @@ refresh(); setInterval(refresh, 2500);
 export function startWebServer() {
   const server = http.createServer(async (req, res) => {
     try {
-      if (req.method === "GET" && req.url === "/") {
-        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" }).end(PAGE);
-      } else if (req.method === "GET" && req.url === "/api/status") {
+      if (req.method === "GET" && req.url === "/healthz") {
+        // No DB touch — pure liveness signal for the platform's health check.
+        res.writeHead(200, { "Content-Type": "text/plain" }).end("ok");
+      } else if (req.method === "GET" && req.url === "/") {
         res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify(status()));
       } else if (req.method === "POST" && req.url === "/rsvp") {
         let body = "";
