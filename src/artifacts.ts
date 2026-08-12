@@ -2,8 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { renderPptx } from "./pptx.js";
 
+import { config } from "./config.js";
+
 export async function writeArtifacts(date: string, data: any): Promise<string> {
-  const dir = path.join("artifacts", date);
+  const dir = path.join(config.artifactsDir, date);
   fs.mkdirSync(dir, { recursive: true });
 
   const { idea, spec, slides, review, count } = data;
