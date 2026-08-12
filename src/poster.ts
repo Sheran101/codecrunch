@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import fs from "node:fs";
 import path from "node:path";
-
+import { config } from "./config.js";
 // Renders an event poster PNG (1200x630) with the location/time/date baked in.
 // Pure SVG shapes + text — no emoji (renderer font support varies), laptops drawn as vectors.
 export async function generatePoster(location: string, time: string, date: string): Promise<string> {
@@ -54,7 +54,7 @@ export async function generatePoster(location: string, time: string, date: strin
   <text x="180" y="570" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">REACT TO JOIN</text>
 </svg>`;
 
-  const dir = path.join("artifacts", date);
+  const dir = path.join(config.artifactsDir, date);
   fs.mkdirSync(dir, { recursive: true });
   const out = path.join(dir, "poster.png");
   await sharp(Buffer.from(svg)).png().toFile(out);
