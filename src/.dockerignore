@@ -1,0 +1,9 @@
+node_modules
+dist
+artifacts
+state.db
+.env
+.git
+.claude
+*.md
+architecture.drawio
